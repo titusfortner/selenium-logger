@@ -118,16 +118,6 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     @Test
-    public void setFormat() {
-        String format = "qqqq: %1$tF %1$tT %4$s - %5$s %n";
-        seleniumLogger.setFormat(format);
-        Assertions.assertEquals(format, seleniumLogger.getFormat());
-
-        driver = new ChromeDriver();
-        Assertions.assertFalse(getOutput().contains("qqqq: "));
-    }
-
-    @Test
     public void defaultFileOutput() {
         Assertions.assertNull(seleniumLogger.getFileOutput());
     }
