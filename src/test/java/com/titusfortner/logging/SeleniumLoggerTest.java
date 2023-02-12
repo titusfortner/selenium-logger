@@ -95,7 +95,6 @@ public class SeleniumLoggerTest extends BaseTest {
     @Test
     public void defaultLevelInfo() {
         Assertions.assertEquals(seleniumLogger.getHandler().getLevel(), Level.INFO);
-        Assertions.assertEquals(seleniumLogger.rootLogger.getHandlers()[0].getLevel(), Level.INFO);
 
         seleniumLogger.getLoggedClasses().forEach(logName -> {
             Arrays.stream(Logger.getLogger(logName).getHandlers()).forEach(h -> {

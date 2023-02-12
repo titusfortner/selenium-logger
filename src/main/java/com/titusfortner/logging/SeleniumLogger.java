@@ -100,8 +100,6 @@ public class SeleniumLogger {
             logger.addHandler(getHandler());
         });
 
-        Arrays.stream(rootLogger.getHandlers()).forEach(handler -> {
-            handler.setLevel(getLevel());
-        });
+        Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
     }
 }
