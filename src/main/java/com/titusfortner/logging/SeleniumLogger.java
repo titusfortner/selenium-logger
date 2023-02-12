@@ -20,7 +20,7 @@ import java.util.logging.SimpleFormatter;
 public class SeleniumLogger {
     public static final String FORMAT = "%1$tF %1$tT %4$s - %5$s %n";
     private final List<String> loggedClasses = new ArrayList<>(List.of(RemoteWebDriver.class.getName(), SeleniumManager.class.getName()));
-    private Handler handler = new ConsoleHandler();
+    private Handler handler;
     private Level level = Level.INFO;
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
@@ -54,6 +54,9 @@ public class SeleniumLogger {
     }
 
     public Handler getHandler() {
+        if (handler == null) {
+            this.handler = new ConsoleHandler();
+        }
         handler.setLevel(getLevel());
         return handler;
     }
@@ -61,7 +64,6 @@ public class SeleniumLogger {
     public void setLevel(Level level) {
         Objects.requireNonNull(level);
         this.level = level;
-        this.handler.setLevel(level);
         updateLogger();
     }
 
