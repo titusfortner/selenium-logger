@@ -25,11 +25,6 @@ public class SeleniumLogger {
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
 
-    public SeleniumLogger() {
-        Arrays.stream(rootLogger.getHandlers()).forEach(handler -> {
-            handler.setLevel(Level.INFO);
-        });
-    }
     public void addLoggedClass(String className) {
         Objects.requireNonNull(className);
         loggedClasses.add(className);
@@ -106,6 +101,10 @@ public class SeleniumLogger {
             logger.setLevel(getLevel());
             Arrays.stream(logger.getHandlers()).forEach(logger::removeHandler);
             logger.addHandler(getHandler());
+        });
+
+        Arrays.stream(rootLogger.getHandlers()).forEach(handler -> {
+            handler.setLevel(getLevel());
         });
     }
 }
