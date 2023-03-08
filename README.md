@@ -30,7 +30,7 @@ seleniumLogger.setFileOutput(file)
 ### Logger level
 
 Logs are set to `Level.INFO` by default. Almost everything in Selenium is currently logged with `Level.FINE`.
-To change the level to info:
+To change the level to `FINE`:
 
 ```java
 SeleniumLogger seleniumLogger = new SeleniumLogger();
@@ -55,7 +55,6 @@ Note that this doesn't have to be a Selenium class, this can be any class in any
 SeleniumLogger seleniumLogger = new SeleniumLogger();
 seleniumLogger.addLoggedClass(ChromeDriver.class.getName());
 ```
-
 
 #### Remove a class
 
