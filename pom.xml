@@ -4,7 +4,7 @@
 
     <groupId>com.titusfortner</groupId>
     <artifactId>selenium-logger</artifactId>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Selenium Logger</name>
@@ -37,7 +37,7 @@
     <scm>
         <developerConnection>scm:git:git@github.com:titusfortner/selenium-logger.git</developerConnection>
         <url>git@github.com:titusfortner/selenium-logger.git</url>
-      <tag>selenium-logger-1.1</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
