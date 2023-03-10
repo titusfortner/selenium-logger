@@ -24,11 +24,15 @@ public class SeleniumLogger {
     private Level level = Level.INFO;
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
-
+    private final GeckoDriverLogger geckoDriverLogger = new GeckoDriverLogger();
     public SeleniumLogger() {
         if (System.getProperty("java.util.logging.SimpleFormatter.format") == null) {
             System.setProperty("java.util.logging.SimpleFormatter.format", FORMAT);
         }
+    }
+
+    public GeckoDriverLogger geckodriver() {
+        return geckoDriverLogger;
     }
 
     public void addLoggedClass(String className) {
@@ -99,6 +103,9 @@ public class SeleniumLogger {
             Arrays.stream(logger.getHandlers()).forEach(logger::removeHandler);
             logger.addHandler(getHandler());
         });
+        if (geckodriver().getFile() == null) {
+            geckodriver().disable();
+        }
 
         Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
     }
