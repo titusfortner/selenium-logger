@@ -14,6 +14,15 @@ If you have...
 
 ## Usage
 
+Add to pom.xml
+```
+<dependency>
+  <groupId>com.titusfortner</groupId>
+  <artifactId>selenium-logger</artifactId>
+  <version>1.1</version>
+</dependency>
+```
+
 ### Logger level
 
 Logs are set to `Level.INFO` by default. Almost everything in Selenium is currently logged with `Level.FINE`.
