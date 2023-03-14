@@ -7,14 +7,22 @@ This package is intended to provide a means to quickly get the most useful infor
 This code is only one example of what can be done.
 
 If you have...
-* **a bug** — let me know by Creating an Issue!
-* **an improvement** — if it helps everyone, Create a PR!
-* **a different opinion** —  if this library does something that you don't like, copy/paste the code in this class to your own project and edit it however you want!
+* **a bug** — let me know by [Creating an Issue](https://github.com/titusfortner/selenium-logger/issues/new)!
+* **an improvement** — if it helps everyone, [Create a PR](https://github.com/titusfortner/selenium-logger/pulls)!
+* **a different opinion** —  if this library does something that you don't like, copy/paste the code to your own project and edit it however you want!
 * **a different implementation** — if there's a better way to do things than this library, create your own! (I'll even help you get it published if you want)
 
 ## Usage
 
-This has specific defaults to make it easier to work with Selenium, but this should provide a lot of flexibility if your needs are relatively simple.
+### Logger level
+
+Logs are set to `Level.INFO` by default. Almost everything in Selenium is currently logged with `Level.FINE`.
+To change the level to `FINE`:
+
+```java
+SeleniumLogger seleniumLogger = new SeleniumLogger();
+seleniumLogger.setLevel(Level.FINE))
+```
 
 ### Logger output
 
@@ -25,16 +33,6 @@ if you want to store the logs in a file, add this to your code:
 SeleniumLogger seleniumLogger = new SeleniumLogger();
 File logFile = new File("/path/to/selenium.log");
 seleniumLogger.setFileOutput(file)
-```
-
-### Logger level
-
-Logs are set to `Level.INFO` by default. Almost everything in Selenium is currently logged with `Level.FINE`.
-To change the level to `FINE`:
-
-```java
-SeleniumLogger seleniumLogger = new SeleniumLogger();
-seleniumLogger.setLevel(Level.FINE))
 ```
 
 ### Logger classes
