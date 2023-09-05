@@ -12,10 +12,7 @@ import org.openqa.selenium.remote.service.DriverFinder;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 public class SeleniumLoggerTest extends BaseTest {
 
@@ -23,7 +20,7 @@ public class SeleniumLoggerTest extends BaseTest {
     public void defaultLogsINFO() {
         logsInfo();
 
-        String out = "INFO - Using OpenTelemetry for tracing";
+        String out = "INFO Selenium [OpenTelemetry";
         Assertions.assertTrue(getOutput().contains(out));
     }
 
@@ -34,7 +31,7 @@ public class SeleniumLoggerTest extends BaseTest {
 
         logsFine();
 
-        String out = "FINE - Selenium Manager binary found";
+        String out = "FINE Selenium [SeleniumManager";
         Assertions.assertTrue(getOutput().contains(out));
     }
 
@@ -43,11 +40,26 @@ public class SeleniumLoggerTest extends BaseTest {
         logsFine();
         logsWarning();
 
-        String warning = "WARNING - chrome banana not available";
+        String warning = "WARNING Selenium [SeleniumManager";
         Assertions.assertTrue(getOutput().contains(warning));
-        String fine = "FINE - Selenium Manager binary found at";
+        String fine = "FINE Selenium [SeleniumManager";
         Assertions.assertFalse(getOutput().contains(fine));
     }
+
+    @Test
+    public void setFormatter() {
+        seleniumLogger.setFormatter(new SimpleFormatter());
+        logsWarning();
+
+        String fine = "WARNING: chrome banana not available for download";
+        Assertions.assertTrue(getOutput().contains(fine));
+    }
+
+    @Test
+    public void getFormatter() {
+        Assertions.assertSame(seleniumLogger.getFormatter().getClass(), SeleniumFormatter.class);
+    }
+
 
     @Test
     public void defaultLoggedClasses() {
@@ -55,8 +67,8 @@ public class SeleniumLoggerTest extends BaseTest {
 
         logsMultipleClasses();
 
-        Assertions.assertTrue(getOutput().contains("FINE - [SeleniumManager"));
-        Assertions.assertTrue(getOutput().contains("FINE - [RemoteWebDriver"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [SeleniumManager"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [RemoteWebDriver"));
     }
 
     @Test
@@ -134,7 +146,7 @@ public class SeleniumLoggerTest extends BaseTest {
         logsWarning();
 
         Assertions.assertEquals("", getOutput());
-        String out = "WARNING - chrome banana not available";
+        String out = "WARNING Selenium [SeleniumManager";
         Assertions.assertTrue(logFileContains(out));
     }
 

@@ -15,23 +15,18 @@ import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class SeleniumLogger {
-    public static final String FORMAT = "%1$tF %1$tT %4$s - %5$s %n";
     private final List<String> loggedClasses = new ArrayList<>(Arrays.asList(RemoteWebDriver.class.getName(), SeleniumManager.class.getName()));
     private Handler handler = new ConsoleHandler();
     private Level level = Level.INFO;
+    private Formatter formatter = new SeleniumFormatter();
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
     private final GeckoDriverLogger geckoDriverLogger = new GeckoDriverLogger();
 
     public SeleniumLogger() {
         Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
-
-        if (System.getProperty("java.util.logging.SimpleFormatter.format") == null) {
-            System.setProperty("java.util.logging.SimpleFormatter.format", FORMAT);
-        }
         updateLogger();
     }
 
@@ -65,6 +60,7 @@ public class SeleniumLogger {
 
     public Handler getHandler() {
         handler.setLevel(getLevel());
+        handler.setFormatter(getFormatter());
         return handler;
     }
 
@@ -78,8 +74,18 @@ public class SeleniumLogger {
         return level;
     }
 
+    public void setFormatter(Formatter formatter) {
+        Objects.requireNonNull(formatter);
+        this.formatter = formatter;
+        updateLogger();
+    }
+
+    public Formatter getFormatter() {
+        return formatter;
+    }
+
     public void setFileOutput(File file) {
-        setFileOutput(file, new SimpleFormatter());
+        setFileOutput(file, getFormatter());
     }
 
     public void setFileOutput(File file, Formatter formatter) {
