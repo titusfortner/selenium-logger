@@ -84,6 +84,11 @@ public class SeleniumLogger {
         return level;
     }
 
+    public void disable() {
+        this.level = Level.OFF;
+        updateLogger();
+    }
+
     public void setFormatter(Formatter formatter) {
         Objects.requireNonNull(formatter);
         this.formatter = formatter;

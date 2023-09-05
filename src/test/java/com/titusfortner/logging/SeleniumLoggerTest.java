@@ -36,6 +36,15 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     @Test
+    public void disableLogs() {
+        seleniumLogger.disable();
+
+        logsWarning();
+
+        Assertions.assertEquals("", getOutput());
+    }
+
+    @Test
     public void setLevelInfoGetsWarningNotFine() {
         logsFine();
         logsWarning();
