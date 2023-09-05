@@ -25,6 +25,16 @@ public class SeleniumLogger {
     public final Logger rootLogger = Logger.getLogger("");
     private final GeckoDriverLogger geckoDriverLogger = new GeckoDriverLogger();
 
+    /**
+     * This turns on logger level to FINE
+     * @return a Selenium Logger
+     */
+    public static SeleniumLogger enable() {
+        SeleniumLogger logger = new SeleniumLogger();
+        logger.setLevel(Level.FINE);
+        return logger;
+    }
+
     public SeleniumLogger() {
         Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
         updateLogger();

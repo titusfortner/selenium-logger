@@ -25,8 +25,8 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     @Test
-    public void setFineToSeeFine() {
-        seleniumLogger.setLevel(Level.FINE);
+    public void enableLogsFINE() {
+        seleniumLogger = SeleniumLogger.enable();
         Assertions.assertEquals(seleniumLogger.getLevel(), Level.FINE);
 
         logsFine();
