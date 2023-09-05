@@ -20,15 +20,19 @@ import java.util.logging.SimpleFormatter;
 public class SeleniumLogger {
     public static final String FORMAT = "%1$tF %1$tT %4$s - %5$s %n";
     private final List<String> loggedClasses = new ArrayList<>(Arrays.asList(RemoteWebDriver.class.getName(), SeleniumManager.class.getName()));
-    private Handler handler;
+    private Handler handler = new ConsoleHandler();
     private Level level = Level.INFO;
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
     private final GeckoDriverLogger geckoDriverLogger = new GeckoDriverLogger();
+
     public SeleniumLogger() {
+        Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
+
         if (System.getProperty("java.util.logging.SimpleFormatter.format") == null) {
             System.setProperty("java.util.logging.SimpleFormatter.format", FORMAT);
         }
+        updateLogger();
     }
 
     public GeckoDriverLogger geckodriver() {
@@ -38,11 +42,13 @@ public class SeleniumLogger {
     public void addLoggedClass(String className) {
         Objects.requireNonNull(className);
         loggedClasses.add(className);
+        updateLogger();
     }
 
     public void removeLoggedClass(String className) {
         Objects.requireNonNull(className);
-        Logger.getLogger(className).setLevel(Level.INFO);
+        Logger logger = Logger.getLogger(className);
+        Arrays.stream(logger.getHandlers()).forEach(logger::removeHandler);
 
         loggedClasses.remove(className);
     }
@@ -58,9 +64,6 @@ public class SeleniumLogger {
     }
 
     public Handler getHandler() {
-        if (handler == null) {
-            this.handler = new ConsoleHandler();
-        }
         handler.setLevel(getLevel());
         return handler;
     }
@@ -103,10 +106,5 @@ public class SeleniumLogger {
             Arrays.stream(logger.getHandlers()).forEach(logger::removeHandler);
             logger.addHandler(getHandler());
         });
-        if (geckodriver().getFile() == null) {
-            geckodriver().disable();
-        }
-
-        Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
     }
 }

@@ -3,13 +3,13 @@ package com.titusfortner.logging;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.manager.SeleniumManager;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.service.DriverFinder;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.ConsoleHandler;
@@ -20,38 +20,43 @@ import java.util.logging.Logger;
 public class SeleniumLoggerTest extends BaseTest {
 
     @Test
-    public void defaultDoesNotContainExecutionOutput() {
-        driver = new ChromeDriver();
+    public void defaultLogsINFO() {
+        logsInfo();
 
-        Assertions.assertTrue(getOutput().contains("ChromeDriver was started successfully"));
-        Assertions.assertFalse(getOutput().contains("Executing: newSession"));
+        String out = "INFO - Using OpenTelemetry for tracing";
+        Assertions.assertTrue(getOutput().contains(out));
     }
 
     @Test
-    public void warnDoesNotContainExecutionOutput() {
-        seleniumLogger.setLevel(Level.WARNING);
-        Assertions.assertEquals(seleniumLogger.getLevel(), Level.WARNING);
-
-        driver = new ChromeDriver();
-
-        Assertions.assertFalse(getOutput().contains("Executing: newSession"));
-    }
-
-    @Test
-    public void fineDoesContainExecutionOutput() {
+    public void setFineToSeeFine() {
         seleniumLogger.setLevel(Level.FINE);
         Assertions.assertEquals(seleniumLogger.getLevel(), Level.FINE);
 
-        driver = new ChromeDriver();
+        logsFine();
 
-        Assertions.assertTrue(getOutput().contains("Executing: newSession"));
+        String out = "FINE - Selenium Manager binary found";
+        Assertions.assertTrue(getOutput().contains(out));
+    }
+
+    @Test
+    public void setLevelInfoGetsWarningNotFine() {
+        logsFine();
+        logsWarning();
+
+        String warning = "WARNING - chrome banana not available";
+        Assertions.assertTrue(getOutput().contains(warning));
+        String fine = "FINE - Selenium Manager binary found at";
+        Assertions.assertFalse(getOutput().contains(fine));
     }
 
     @Test
     public void defaultLoggedClasses() {
-        List<String> classes = seleniumLogger.getLoggedClasses();
-        Assertions.assertTrue(classes.contains(RemoteWebDriver.class.getName()));
-        Assertions.assertTrue(classes.contains(SeleniumManager.class.getName()));
+        seleniumLogger.setLevel(Level.FINE);
+
+        logsMultipleClasses();
+
+        Assertions.assertTrue(getOutput().contains("FINE - [SeleniumManager"));
+        Assertions.assertTrue(getOutput().contains("FINE - [RemoteWebDriver"));
     }
 
     @Test
@@ -65,13 +70,13 @@ public class SeleniumLoggerTest extends BaseTest {
     @Test
     public void removeLoggedClass() {
         seleniumLogger.setLevel(Level.FINE);
-        String className = RemoteWebDriver.class.getName();
+        String className = SeleniumManager.class.getName();
         seleniumLogger.removeLoggedClass(className);
 
         Assertions.assertFalse(seleniumLogger.getLoggedClasses().contains(className));
 
-        driver = new ChromeDriver();
-        Assertions.assertFalse(getOutput().contains("Executing: newSession"));
+        logsFine();
+        Assertions.assertEquals("", getOutput());
     }
 
     @Test
@@ -123,20 +128,52 @@ public class SeleniumLoggerTest extends BaseTest {
 
     @Test
     public void setFileOutputDoesNotLogToConsole() {
+        createLogFile("selenium");
+        seleniumLogger.setFileOutput(logFile.toFile());
+
+        logsWarning();
+
+        Assertions.assertEquals("", getOutput());
+        String out = "WARNING - chrome banana not available";
+        Assertions.assertTrue(logFileContains(out));
+    }
+
+    // This is the only place Selenium uses INFO
+    // It's a singleton, so it only works once
+    private void logsInfo() {
+        seleniumLogger.addLoggedClass("org.openqa.selenium.remote.tracing.opentelemetry.OpenTelemetryTracer");
         try {
-            seleniumLogger.setLevel(Level.FINE);
-            Path path = Files.createTempFile("selenium-logging-", ".log");
-            File file = path.toFile();
-            seleniumLogger.setFileOutput(file);
+            URL url = new URL("http://localhost");
+            ChromeOptions options = new ChromeOptions();
 
-            driver = new ChromeDriver();
-
-            String expectedText = "Executing: newSession";
-            Assertions.assertFalse(getOutput().contains(expectedText));
-
-            Assertions.assertTrue(Files.readAllLines(path).toString().contains(expectedText));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            new RemoteWebDriver(url, options);
+        } catch (Throwable e) {
+            // ignore
         }
+    }
+
+    // Code that Generates a Selenium Manager WARNING in logs
+    private void logsWarning() {
+        try {
+            ChromeDriverService service = ChromeDriverService.createDefaultService();
+            ChromeOptions options = new ChromeOptions();
+            options.setBrowserVersion("banana");
+            DriverFinder.getPath(service, options, true);
+        } catch (Throwable e) {
+            // ignore
+        }
+    }
+
+    // Code that Generates a Selenium Manager FINE in logs
+    private void logsFine() {
+        try {
+            DriverFinder.getPath(ChromeDriverService.createDefaultService(), new ChromeOptions(), true);
+        } catch (Throwable e) {
+            // ignore
+        }
+    }
+
+    private void logsMultipleClasses() {
+        driver = new ChromeDriver();
     }
 }

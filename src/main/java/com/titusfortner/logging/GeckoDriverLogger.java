@@ -1,10 +1,10 @@
 package com.titusfortner.logging;
 
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.GeckoDriverService;
 
 import java.io.File;
 public class GeckoDriverLogger {
-    private final String fileProperty = FirefoxDriver.SystemProperty.BROWSER_LOGFILE;
+    private final String fileProperty = GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY;
 
     public void enable() {
         setProperty("/dev/stderr");
