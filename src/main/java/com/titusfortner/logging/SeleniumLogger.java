@@ -105,20 +105,26 @@ public class SeleniumLogger {
     }
 
     public void setFileOutput(File file) {
-        setFileOutput(file, getFormatter());
-    }
-
-    public void setFileOutput(File file, Formatter formatter) {
         Objects.requireNonNull(file);
-        Objects.requireNonNull(formatter);
         this.file = file;
         try {
-            Handler handler = new FileHandler(file.toString());
-            handler.setFormatter(formatter);
-            setHandler(handler);
+            handler = new FileHandler(file.toString());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        updateLogger();
+    }
+
+    /**
+     * @deprecated use this method without formatter argument and use setFormatter() to change formatter
+     */
+    @Deprecated
+    public void setFileOutput(File file, Formatter formatter) {
+        Objects.requireNonNull(file);
+        Objects.requireNonNull(formatter);
+        this.formatter = formatter;
+
+        setFileOutput(file);
     }
 
     public File getFileOutput() {
