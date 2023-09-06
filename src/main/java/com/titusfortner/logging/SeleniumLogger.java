@@ -37,6 +37,14 @@ public class SeleniumLogger {
         return logger;
     }
 
+    public static SeleniumLogger enable(String name, String... names) {
+        SeleniumLogger logger = SeleniumLogger.enable();
+        if (name != null) {
+            logger.filter(name, names);
+        }
+        return logger;
+    }
+
     public static SeleniumLogger all() {
         SeleniumLogger logger = new SeleniumLogger();
         SeleniumFilter seleniumFilter = new SeleniumFilter();
@@ -165,6 +173,15 @@ public class SeleniumLogger {
 
     public File getFileOutput() {
         return file;
+    }
+
+    public void filter(String name, String... names) {
+        Objects.requireNonNull(name);
+        SeleniumFilter filter = new SeleniumFilter();
+        filter.clear();
+        filter.addAllowed(name);
+        Arrays.stream(names).forEach(filter::addAllowed);
+        setFilter(filter);
     }
 
     public void setFilter(Filter filter) {

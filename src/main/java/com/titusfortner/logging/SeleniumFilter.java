@@ -31,6 +31,11 @@ public class SeleniumFilter implements Filter {
         logBlockList.add(blocked);
     }
 
+    public void clear() {
+        logAllowedList.clear();
+        logBlockList.clear();
+    }
+
     public List<String> getLogBlockList() {
         return logBlockList;
     }

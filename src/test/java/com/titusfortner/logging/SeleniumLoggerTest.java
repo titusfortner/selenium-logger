@@ -12,7 +12,6 @@ import org.openqa.selenium.remote.service.DriverFinder;
 
 import java.net.URL;
 import java.util.Arrays;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -126,6 +125,18 @@ public class SeleniumLoggerTest extends BaseTest {
         Assertions.assertTrue(getOutput().contains("FINE [HttpClientImpl"));
         Assertions.assertTrue(getOutput().contains("FINE Selenium [SeleniumManager"));
         Assertions.assertTrue(getOutput().contains("FINE Selenium [DriverService"));
+    }
+
+    @Test
+    public void addFilter() {
+        seleniumLogger.setLevel(Level.FINE);
+        seleniumLogger.filter("SeleniumManager");
+
+        logsMultipleClasses();
+
+        Assertions.assertFalse(getOutput().contains("FINE [HttpClientImpl"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [SeleniumManager"));
+        Assertions.assertFalse(getOutput().contains("FINE Selenium [DriverService"));
     }
 
     @Test
