@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 
 public class BaseTest {
     protected WebDriver driver;
-    protected SeleniumLogger seleniumLogger;
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
     private static final PrintStream originalErr = System.err;
     protected Path logFile;
@@ -22,7 +21,6 @@ public class BaseTest {
     @BeforeEach
     public void setup() {
         System.setErr(new PrintStream(err));
-        seleniumLogger = new SeleniumLogger();
     }
 
     @AfterEach

@@ -40,6 +40,11 @@ public class SeleniumLogger {
         updateLogger();
     }
 
+    /**
+     * This is deprecated. Initialize directly with new GeckoDriverLogger()
+     * @return instance of GeckoDriverLogger
+     */
+    @Deprecated
     public GeckoDriverLogger geckodriver() {
         return geckoDriverLogger;
     }

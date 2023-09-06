@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class GeckoDriverLoggerTest extends BaseTest {
+    private final GeckoDriverLogger geckodriverLogger = new GeckoDriverLogger();
+
     @Test
     public void defaultDisablesGeckoDriverOutput() {
         driver = new FirefoxDriver();
@@ -19,7 +21,7 @@ public class GeckoDriverLoggerTest extends BaseTest {
 
     @Test
     public void enableGeckoDriverOutput() {
-        seleniumLogger.geckodriver().enable();
+        geckodriverLogger.enable();
 
         driver = new FirefoxDriver();
 
@@ -28,8 +30,8 @@ public class GeckoDriverLoggerTest extends BaseTest {
 
     @Test
     public void disableGeckoDriverOutput() {
-        seleniumLogger.geckodriver().enable();
-        seleniumLogger.geckodriver().disable();
+        geckodriverLogger.enable();
+        geckodriverLogger.disable();
 
         driver = new FirefoxDriver();
 
@@ -52,7 +54,7 @@ public class GeckoDriverLoggerTest extends BaseTest {
     @Test
     public void setsGeckoDriverLogPath() throws IOException {
         Path path = Files.createTempFile("geckodriver-logging-", ".log");
-        seleniumLogger.geckodriver().setFile(path.toFile());
+        geckodriverLogger.setFile(path.toFile());
 
         driver = new FirefoxDriver();
 
@@ -66,6 +68,6 @@ public class GeckoDriverLoggerTest extends BaseTest {
         Path path = Files.createTempFile("geckodriver-logging-", ".log");
         System.setProperty(logfileProperty, path.toString());
 
-        Assertions.assertEquals(path.toFile(), seleniumLogger.geckodriver().getFile());
+        Assertions.assertEquals(path.toFile(), geckodriverLogger.getFile());
     }
 }

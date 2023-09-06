@@ -1,6 +1,7 @@
 package com.titusfortner.logging;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
@@ -15,6 +16,12 @@ import java.util.List;
 import java.util.logging.*;
 
 public class SeleniumLoggerTest extends BaseTest {
+    private SeleniumLogger seleniumLogger;
+
+    @BeforeEach
+    public void initialize() {
+        seleniumLogger = new SeleniumLogger();
+    }
 
     @Test
     public void defaultLogsINFO() {
