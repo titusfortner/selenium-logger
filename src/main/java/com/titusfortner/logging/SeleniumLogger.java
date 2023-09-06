@@ -167,6 +167,13 @@ public class SeleniumLogger {
         return file;
     }
 
+    public void filter(String... f) {
+        SeleniumFilter filter = new SeleniumFilter();
+        filter.clear();
+        Arrays.stream(f).forEach(filter::addAllowed);
+        setFilter(filter);
+    }
+
     public void setFilter(Filter filter) {
         Objects.requireNonNull(filter);
         this.filter = filter;
