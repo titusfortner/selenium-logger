@@ -1,31 +1,63 @@
 package com.titusfortner.logging;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class GeckoDriverLoggerTest extends BaseTest {
-    private final GeckoDriverLogger geckodriverLogger = new GeckoDriverLogger();
-
-    @Test
-    public void defaultDisablesGeckoDriverOutput() {
-        driver = new FirefoxDriver();
-
-        Assertions.assertFalse(getOutput().contains("geckodriver\tINFO\tListening on"));
+    private GeckoDriverLogger geckodriverLogger;
+    @BeforeEach
+    public void setFirefoxDriverLogger() {
+        geckodriverLogger = new GeckoDriverLogger();
+        System.clearProperty(GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY);
+        System.clearProperty(GeckoDriverService.GECKO_DRIVER_LOG_LEVEL_PROPERTY);
     }
 
     @Test
-    public void enableGeckoDriverOutput() {
+    public void defaultLogsNothing() {
+        logsInfo();
+
+        Assertions.assertNull(geckodriverLogger.getLevel());
+        Assertions.assertNull(geckodriverLogger.getOutput());
+        Assertions.assertEquals("", getOutput());
+    }
+
+    @Test
+    public void enableLogsInfo() {
+        geckodriverLogger.enable();
+
+        logsInfo();
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.INFO, geckodriverLogger.getLevel());
+        Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
+        Assertions.assertTrue(getOutput().contains("\tINFO\t"));
+    }
+
+    @Test
+    public void enableIgnoresLevel() {
+        geckodriverLogger.setLevel(FirefoxDriverLogLevel.DEBUG);
+        geckodriverLogger.enable();
+
+        Assertions.assertEquals(geckodriverLogger.getLevel(), FirefoxDriverLogLevel.DEBUG);
+        Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
+    }
+
+    @Test
+    public void enableIgnoresOutput() {
+        createLogFile("firefoxDriver");
+        geckodriverLogger.setFile(logFile.toFile());
         geckodriverLogger.enable();
 
         driver = new FirefoxDriver();
 
-        Assertions.assertTrue(getOutput().contains("geckodriver\tINFO\tListening on"));
+        Assertions.assertEquals(FirefoxDriverLogLevel.INFO, geckodriverLogger.getLevel());
+        Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
     }
 
     @Test
@@ -33,41 +65,76 @@ public class GeckoDriverLoggerTest extends BaseTest {
         geckodriverLogger.enable();
         geckodriverLogger.disable();
 
-        driver = new FirefoxDriver();
+        logsInfo();
 
-        Assertions.assertFalse(getOutput().contains("geckodriver\tINFO\tListening on"));
+        Assertions.assertEquals(DriverService.LOG_NULL, geckodriverLogger.getOutput());
+        Assertions.assertEquals("", getOutput());
     }
 
     @Test
-    public void ignoreGeckoDriverOutputWhenAlreadySet() throws IOException {
-        String logfileProperty = GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY;
-        Path path = Files.createTempFile("geckodriver-logging-", ".log");
+    public void disableIgnoresLevel() {
+        geckodriverLogger.setLevel(FirefoxDriverLogLevel.DEBUG);
+        geckodriverLogger.disable();
 
-        System.setProperty(logfileProperty, path.toString());
-
-        driver = new FirefoxDriver();
-
-        Assertions.assertFalse(getOutput().contains("geckodriver\tINFO\tListening on"));
-        Assertions.assertTrue(Files.readAllLines(path).toString().contains("geckodriver\tINFO\tListening on"));
+        Assertions.assertEquals(FirefoxDriverLogLevel.DEBUG, geckodriverLogger.getLevel());
     }
 
     @Test
-    public void setsGeckoDriverLogPath() throws IOException {
-        Path path = Files.createTempFile("geckodriver-logging-", ".log");
-        geckodriverLogger.setFile(path.toFile());
+    public void setLevelEnables() {
+        geckodriverLogger.setLevel(FirefoxDriverLogLevel.DEBUG);
 
-        driver = new FirefoxDriver();
+        logsDebug();
 
-        Assertions.assertFalse(getOutput().contains("geckodriver\tINFO\tListening on"));
-        Assertions.assertTrue(Files.readAllLines(path).toString().contains("geckodriver\tINFO\tListening on"));
+        Assertions.assertEquals(FirefoxDriverLogLevel.DEBUG, geckodriverLogger.getLevel());
+        Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
+        Assertions.assertTrue(getOutput().contains("\tDEBUG\t"));
     }
 
     @Test
-    public void getsGeckoDriverLogPath() throws IOException {
-        String logfileProperty = GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY;
-        Path path = Files.createTempFile("geckodriver-logging-", ".log");
-        System.setProperty(logfileProperty, path.toString());
+    public void setLevelIgnoresOutput() {
+        createLogFile("firefoxDriver");
+        geckodriverLogger.setFile(logFile.toFile());
 
-        Assertions.assertEquals(path.toFile(), geckodriverLogger.getFile());
+        geckodriverLogger.setLevel(FirefoxDriverLogLevel.DEBUG);
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.DEBUG, geckodriverLogger.getLevel());
+        Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
+    }
+
+    @Test
+    public void setsFile() {
+        createLogFile("firefoxDriver");
+        geckodriverLogger.setFile(logFile.toFile());
+
+        logsInfo();
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.INFO, geckodriverLogger.getLevel());
+        Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
+        Assertions.assertEquals("", getOutput());
+        Assertions.assertTrue(logFileContains("\tINFO\t"));
+    }
+
+    @Test
+    public void setFileIgnoresLevel() {
+        geckodriverLogger.setLevel(FirefoxDriverLogLevel.DEBUG);
+        createLogFile("firefoxDriver");
+        geckodriverLogger.setFile(logFile.toFile());
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.DEBUG, geckodriverLogger.getLevel());
+        Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
+        Assertions.assertEquals(logFile.toFile(), geckodriverLogger.getFile());
+    }
+
+    private void logsInfo() {
+        service = new GeckoDriverService.Builder().build();
+        try {
+            service.start();
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+
+    private void logsDebug() {
+        driver = new FirefoxDriver();
     }
 }
