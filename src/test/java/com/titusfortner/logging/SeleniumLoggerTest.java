@@ -12,8 +12,10 @@ import org.openqa.selenium.remote.service.DriverFinder;
 
 import java.net.URL;
 import java.util.Arrays;
-import java.util.List;
-import java.util.logging.*;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class SeleniumLoggerTest extends BaseTest {
     private SeleniumLogger seleniumLogger;
@@ -76,6 +78,60 @@ public class SeleniumLoggerTest extends BaseTest {
         Assertions.assertSame(seleniumLogger.getFormatter().getClass(), SeleniumFormatter.class);
     }
 
+    @Test
+    public void defaultFilteredClasses() {
+        seleniumLogger.setLevel(Level.FINE);
+        seleniumLogger.setFilter(new SeleniumFilter());
+
+        logsMultipleClasses();
+
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [SeleniumManager"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [RemoteWebDriver"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [DriverService"));
+    }
+
+    @Test
+    public void addToBlockedList() {
+        seleniumLogger.setLevel(Level.FINE);
+        SeleniumFilter filter = new SeleniumFilter();
+        filter.addBlocked("SeleniumManager");
+        seleniumLogger.setFilter(filter);
+
+        logsMultipleClasses();
+
+        Assertions.assertFalse(getOutput().contains("FINE Selenium [SeleniumManager"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [RemoteWebDriver"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [DriverService"));
+    }
+
+    @Test
+    public void addToAllowedList() {
+        seleniumLogger.setLevel(Level.FINE);
+        SeleniumFilter filter = new SeleniumFilter();
+        filter.addAllowed("http");
+        seleniumLogger.setFilter(filter);
+
+        logsMultipleClasses();
+
+        Assertions.assertTrue(getOutput().contains("FINE [HttpClientImpl"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [SeleniumManager"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [DriverService"));
+    }
+
+    @Test
+    public void mixAllowAndBlockLists() {
+        seleniumLogger.setLevel(Level.FINE);
+        SeleniumFilter filter = new SeleniumFilter();
+        filter.addBlocked("SeleniumManager");
+        filter.addAllowed("http");
+        seleniumLogger.setFilter(filter);
+
+        logsMultipleClasses();
+
+        Assertions.assertTrue(getOutput().contains("FINE [HttpClientImpl"));
+        Assertions.assertFalse(getOutput().contains("FINE Selenium [SeleniumManager"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [DriverService"));
+    }
 
     @Test
     public void defaultLoggedClasses() {

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
+import java.util.logging.Filter;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
@@ -20,6 +21,7 @@ public class SeleniumLogger {
     private final List<String> loggedClasses = new ArrayList<>(Arrays.asList(RemoteWebDriver.class.getName(), SeleniumManager.class.getName()));
     private Handler handler = new ConsoleHandler();
     private Level level = Level.INFO;
+    private Filter filter;
     private Formatter formatter = new SeleniumFormatter();
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
@@ -49,12 +51,22 @@ public class SeleniumLogger {
         return geckoDriverLogger;
     }
 
+    /**
+     * @deprecated switch to using setFilter() with SeleniumFilter instance
+     * @param className the name of the class to log
+     */
+    @Deprecated
     public void addLoggedClass(String className) {
         Objects.requireNonNull(className);
         loggedClasses.add(className);
         updateLogger();
     }
 
+    /**
+     * @deprecated switch to using setFilter() with SeleniumFilter instance
+     * @param className the name of the class to remove from logging list
+     */
+    @Deprecated
     public void removeLoggedClass(String className) {
         Objects.requireNonNull(className);
         Logger logger = Logger.getLogger(className);
@@ -63,6 +75,10 @@ public class SeleniumLogger {
         loggedClasses.remove(className);
     }
 
+    /**
+     * @deprecated switch to using setFilter() and getFilter() for SeleniumFilter instance
+     */
+    @Deprecated
     public List<String> getLoggedClasses() {
         return loggedClasses;
     }
@@ -77,9 +93,15 @@ public class SeleniumLogger {
         updateLogger();
     }
 
+    /**
+     * @deprecated handler is built from provided parameters, get each as needed
+     * @return instance of constructed Handler
+     */
+    @Deprecated
     public Handler getHandler() {
         handler.setLevel(getLevel());
         handler.setFormatter(getFormatter());
+        handler.setFilter(getFilter());
         return handler;
     }
 
@@ -135,12 +157,29 @@ public class SeleniumLogger {
         return file;
     }
 
+    public void setFilter(Filter filter) {
+        Objects.requireNonNull(filter);
+        this.filter = filter;
+        updateLogger();
+    }
+
+    public Filter getFilter() {
+        return filter;
+    }
+
     private void updateLogger() {
         getLoggedClasses().forEach(logName -> {
             Logger logger = Logger.getLogger(logName);
             logger.setLevel(getLevel());
             Arrays.stream(logger.getHandlers()).forEach(logger::removeHandler);
-            logger.addHandler(getHandler());
         });
+
+        if (getFilter() != null) {
+            Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
+            rootLogger.addHandler(getHandler());
+        } else {
+            getLoggedClasses().forEach(logName -> Logger.getLogger(logName).addHandler(getHandler()));
+        }
+        rootLogger.setLevel(getLevel());
     }
 }
