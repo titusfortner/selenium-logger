@@ -1,33 +1,63 @@
 package com.titusfortner.logging;
 
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.GeckoDriverService;
+import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.File;
+
 public class GeckoDriverLogger {
-    private final String fileProperty = GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY;
 
     public void enable() {
-        setProperty("/dev/stderr");
+        ensureLevel();
+        ensureOutput();
     }
 
     public void disable() {
-        setProperty("/dev/null");
+        System.setProperty(getLogProperty(), DriverService.LOG_NULL);
+    }
+
+    public void setLevel(FirefoxDriverLogLevel level) {
+        System.setProperty(getLogLevelProperty(), level.name());
+        ensureOutput();
+    }
+
+    public FirefoxDriverLogLevel getLevel() {
+        String logLevel = System.getProperty(getLogLevelProperty());
+        return logLevel == null ? null : FirefoxDriverLogLevel.valueOf(logLevel);
+    }
+
+    public String getOutput() {
+        return System.getProperty(getLogProperty());
     }
 
     public void setFile(File fileName) {
-        setProperty(fileName.getAbsolutePath());
+        System.setProperty(getLogProperty(), fileName.getAbsolutePath());
+        ensureLevel();
     }
 
     public File getFile() {
-        String path = System.getProperty(fileProperty);
-        if (path == null) {
-            return null;
-        } else {
-            return new File(path);
+        String path = getOutput();
+        return path == null || !new File(path).isFile() ? null : new File(path);
+    }
+
+    private void ensureLevel() {
+        if (getLevel() == null) {
+            setLevel(FirefoxDriverLogLevel.INFO);
         }
     }
 
-    private void setProperty(String property) {
-        System.setProperty(fileProperty, property);
+    private void ensureOutput() {
+        if (getOutput() == null) {
+            System.setProperty(getLogProperty(), DriverService.LOG_STDERR);
+        }
+    }
+
+    private String getLogProperty() {
+        return GeckoDriverService.GECKO_DRIVER_LOG_PROPERTY;
+    }
+
+    private String getLogLevelProperty() {
+        return GeckoDriverService.GECKO_DRIVER_LOG_LEVEL_PROPERTY;
     }
 }

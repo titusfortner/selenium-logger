@@ -4,6 +4,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.util.stream.Stream;
 
 public class BaseTest {
     protected WebDriver driver;
+    protected DriverService service;
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
     private static final PrintStream originalErr = System.err;
     protected Path logFile;
@@ -27,6 +29,9 @@ public class BaseTest {
     public void teardown() {
         if (driver != null) {
             driver.quit();
+        }
+        if (service != null) {
+            service.close();
         }
     }
 
