@@ -67,6 +67,10 @@ public class SeleniumLogger {
         return loggedClasses;
     }
 
+    /**
+     * @deprecated the handler is built from existing parameters
+     */
+    @Deprecated
     public void setHandler(Handler handler) {
         Objects.requireNonNull(handler);
         this.handler = handler;

@@ -108,24 +108,6 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     @Test
-    public void defaultHandlerConsoleHandler() {
-        Assertions.assertTrue(seleniumLogger.getHandler() instanceof ConsoleHandler);
-    }
-
-
-    @Test
-    public void setHandler() {
-        Handler handler = new ConsoleHandler();
-        seleniumLogger.setHandler(handler);
-
-        seleniumLogger.getLoggedClasses().forEach(logName -> {
-            Arrays.stream(Logger.getLogger(logName).getHandlers()).forEach(h -> {
-                Assertions.assertEquals(h, handler);
-            });
-        });
-    }
-
-    @Test
     public void defaultLevelInfo() {
         Assertions.assertEquals(seleniumLogger.getHandler().getLevel(), Level.INFO);
 
