@@ -45,6 +45,16 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     @Test
+    public void turnsOnAllLogs() {
+        seleniumLogger = SeleniumLogger.all();
+
+        logsMultipleClasses();
+
+        Assertions.assertTrue(getOutput().contains("FINEST [HttpURLConnection"));
+        Assertions.assertTrue(getOutput().contains("FINEST [ClientVector"));
+    }
+
+    @Test
     public void disableLogs() {
         seleniumLogger.disable();
 

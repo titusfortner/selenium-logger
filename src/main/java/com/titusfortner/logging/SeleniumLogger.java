@@ -37,6 +37,16 @@ public class SeleniumLogger {
         return logger;
     }
 
+    public static SeleniumLogger all() {
+        SeleniumLogger logger = new SeleniumLogger();
+        SeleniumFilter seleniumFilter = new SeleniumFilter();
+        seleniumFilter.addAllowed("");
+
+        logger.setFilter(seleniumFilter);
+        logger.setLevel(Level.ALL);
+        return logger;
+    }
+
     public SeleniumLogger() {
         Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
         updateLogger();
