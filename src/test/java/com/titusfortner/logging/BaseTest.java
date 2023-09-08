@@ -9,6 +9,7 @@ import org.openqa.selenium.remote.service.DriverService;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Stream;
@@ -47,6 +48,17 @@ public class BaseTest {
     protected Boolean logFileContains(String text) {
         try (Stream<String> stream = Files.lines(logFile)) {
             return stream.anyMatch(line -> line.contains(text));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected Long logFileSize() {
+        if (logFile == null) {
+            return null;
+        }
+        try (Stream<String> stream = Files.lines(logFile, StandardCharsets.UTF_8)) {
+            return stream.count();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
