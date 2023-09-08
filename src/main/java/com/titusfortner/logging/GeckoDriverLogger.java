@@ -13,6 +13,10 @@ public class GeckoDriverLogger {
         ensureOutput();
     }
 
+    public void all() {
+        setLevel(FirefoxDriverLogLevel.TRACE);
+    }
+
     public void disable() {
         System.setProperty(getLogProperty(), DriverService.LOG_NULL);
     }
@@ -41,6 +45,12 @@ public class GeckoDriverLogger {
         return path == null || !new File(path).isFile() ? null : new File(path);
     }
 
+    public void setTruncate(Boolean truncate) {
+        System.setProperty(getTruncateProperty(), String.valueOf(!truncate));
+        ensureLevel();
+        ensureOutput();
+    }
+
     private void ensureLevel() {
         if (getLevel() == null) {
             setLevel(FirefoxDriverLogLevel.INFO);
@@ -59,5 +69,9 @@ public class GeckoDriverLogger {
 
     private String getLogLevelProperty() {
         return GeckoDriverService.GECKO_DRIVER_LOG_LEVEL_PROPERTY;
+    }
+
+    private String getTruncateProperty() {
+        return GeckoDriverService.GECKO_DRIVER_LOG_NO_TRUNCATE;
     }
 }

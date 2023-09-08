@@ -44,7 +44,7 @@ public class GeckoDriverLoggerTest extends BaseTest {
         geckodriverLogger.setLevel(FirefoxDriverLogLevel.DEBUG);
         geckodriverLogger.enable();
 
-        Assertions.assertEquals(geckodriverLogger.getLevel(), FirefoxDriverLogLevel.DEBUG);
+        Assertions.assertEquals(FirefoxDriverLogLevel.DEBUG, geckodriverLogger.getLevel());
         Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
     }
 
@@ -53,8 +53,6 @@ public class GeckoDriverLoggerTest extends BaseTest {
         createLogFile("firefoxDriver");
         geckodriverLogger.setFile(logFile.toFile());
         geckodriverLogger.enable();
-
-        driver = new FirefoxDriver();
 
         Assertions.assertEquals(FirefoxDriverLogLevel.INFO, geckodriverLogger.getLevel());
         Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
@@ -123,6 +121,52 @@ public class GeckoDriverLoggerTest extends BaseTest {
         Assertions.assertEquals(FirefoxDriverLogLevel.DEBUG, geckodriverLogger.getLevel());
         Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
         Assertions.assertEquals(logFile.toFile(), geckodriverLogger.getFile());
+    }
+
+    @Test
+    public void allLogLevels() {
+        geckodriverLogger.all();
+
+        logsDebug();
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.TRACE, geckodriverLogger.getLevel());
+        Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
+        Assertions.assertTrue(getOutput().contains("\tTRACE\t"));
+    }
+
+    @Test
+    public void allLogsIgnoresOutput() {
+        createLogFile("firefoxDriver");
+        geckodriverLogger.setFile(logFile.toFile());
+        geckodriverLogger.all();
+
+        logsDebug();
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.TRACE, geckodriverLogger.getLevel());
+        Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
+        Assertions.assertFalse(getOutput().contains("\tTRACE\t"));
+    }
+
+    @Test
+    public void truncates() {
+        geckodriverLogger.setTruncate(true);
+
+        logsDebug();
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.INFO, geckodriverLogger.getLevel());
+        Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
+        Assertions.assertTrue(getOutput().contains(" ... "));
+    }
+
+    @Test
+    public void doesNotTruncate() {
+        geckodriverLogger.setTruncate(false);
+
+        logsDebug();
+
+        Assertions.assertEquals(FirefoxDriverLogLevel.INFO, geckodriverLogger.getLevel());
+        Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
+        Assertions.assertFalse(getOutput().contains(" ... "));
     }
 
     private void logsInfo() {
