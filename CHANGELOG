@@ -1,0 +1,35 @@
+v1.2.0
+======
+
+Selenium Logging:
+* Updates to work with latest Selenium code
+* Create custom formatter for better display of information in logs
+* Implement `enable()`, `disable()` and `all()` as convenience methods
+* Implemented a default filter with allow lists and block lists; usage is opt-in until 2.0
+* Allow setting and getting a custom filter; this overrides the `loggedClasses` implementation
+* Deprecation: `geckodriver()`; use `GeckoDriverLogger` constructor directly
+* Deprecation: `setFileOutput()` with a new formatter; Use `setFormatter()` if a specific format is desired
+* Deprecation: `setHandler()`; Handler is generated dynamically, adjust the specific handler property directly.
+* Deprecation: `addLoggedClass()`, `removeLoggedClass()`, `getLoggedClasses()`; Use a filter instead
+
+Driver Logging:
+* Add support for ChromeDriver, EdgeDriver, SafariDriver, InternetExplorerDriver
+* All: implement `enable()` to log output to `System.err` at the `INFO` level
+* All: allow setting level (except Safari)
+* All: allow changing output to a file (except Safari)
+* Chromium: support appending to log
+* Chromium: support changing timestamp to a readable format
+* Firefox: support turning off truncation
+* Safari: support getting logging directory location
+* Safari: support getting list of files in logging directory
+* Support getting the file of the most likely log from logging directory
+
+v1.1.0
+======
+* Add support to turn off Geckodriver logs
+
+v1.0.0
+======
+* Send logs to file
+* Change log level
+* Add or Remove class names to log
