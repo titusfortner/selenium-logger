@@ -6,14 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.manager.SeleniumManager;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.service.DriverFinder;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class SeleniumLoggerTest extends BaseTest {
@@ -165,50 +162,6 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     @Test
-    public void addLoggedClass() {
-        String className = ChromeDriver.class.getName();
-        seleniumLogger.addLoggedClass(className);
-
-        Assertions.assertTrue(seleniumLogger.getLoggedClasses().contains(className));
-    }
-
-    @Test
-    public void removeLoggedClass() {
-        seleniumLogger.setLevel(Level.FINE);
-        String className = SeleniumManager.class.getName();
-        seleniumLogger.removeLoggedClass(className);
-
-        Assertions.assertFalse(seleniumLogger.getLoggedClasses().contains(className));
-
-        logsFine();
-        Assertions.assertEquals("", getOutput());
-    }
-
-    @Test
-    public void defaultLevelInfo() {
-        Assertions.assertEquals(seleniumLogger.getHandler().getLevel(), Level.INFO);
-
-        seleniumLogger.getLoggedClasses().forEach(logName -> {
-            Arrays.stream(Logger.getLogger(logName).getHandlers()).forEach(h -> {
-                Assertions.assertEquals(h.getLevel(), Level.INFO);
-            });
-        });
-    }
-
-    @Test
-    public void setLevelChangesHandlersLevel() {
-        seleniumLogger.setLevel(Level.FINE);
-
-        Assertions.assertEquals(seleniumLogger.getHandler().getLevel(), Level.FINE);
-
-        seleniumLogger.getLoggedClasses().forEach(logName -> {
-            Arrays.stream(Logger.getLogger(logName).getHandlers()).forEach(h -> {
-                Assertions.assertEquals(h.getLevel(), Level.FINE);
-            });
-        });
-    }
-
-    @Test
     public void defaultFileOutput() {
         Assertions.assertNull(seleniumLogger.getFileOutput());
     }
@@ -228,7 +181,7 @@ public class SeleniumLoggerTest extends BaseTest {
     // This is the only place Selenium uses INFO
     // It's a singleton, so it only works once
     private void logsInfo() {
-        seleniumLogger.addLoggedClass("org.openqa.selenium.remote.tracing.opentelemetry.OpenTelemetryTracer");
+        seleniumLogger.filter("OpenTelemetryTracer");
         try {
             URL url = new URL("http://localhost");
             ChromeOptions options = new ChromeOptions();

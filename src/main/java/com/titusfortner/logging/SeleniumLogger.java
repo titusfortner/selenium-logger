@@ -1,13 +1,8 @@
 package com.titusfortner.logging;
 
-import org.openqa.selenium.manager.SeleniumManager;
-import org.openqa.selenium.remote.RemoteWebDriver;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
@@ -18,10 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SeleniumLogger {
-    private final List<String> loggedClasses = new ArrayList<>(Arrays.asList(RemoteWebDriver.class.getName(), SeleniumManager.class.getName()));
     private Handler handler = new ConsoleHandler();
     private Level level = Level.INFO;
-    private Filter filter;
+    private Filter filter = new SeleniumFilter();
     private Formatter formatter = new SeleniumFormatter();
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
@@ -56,7 +50,6 @@ public class SeleniumLogger {
     }
 
     public SeleniumLogger() {
-        Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
         updateLogger();
     }
 
@@ -67,38 +60,6 @@ public class SeleniumLogger {
     @Deprecated
     public GeckoDriverLogger geckodriver() {
         return geckoDriverLogger;
-    }
-
-    /**
-     * @deprecated switch to using setFilter() with SeleniumFilter instance
-     * @param className the name of the class to log
-     */
-    @Deprecated
-    public void addLoggedClass(String className) {
-        Objects.requireNonNull(className);
-        loggedClasses.add(className);
-        updateLogger();
-    }
-
-    /**
-     * @deprecated switch to using setFilter() with SeleniumFilter instance
-     * @param className the name of the class to remove from logging list
-     */
-    @Deprecated
-    public void removeLoggedClass(String className) {
-        Objects.requireNonNull(className);
-        Logger logger = Logger.getLogger(className);
-        Arrays.stream(logger.getHandlers()).forEach(logger::removeHandler);
-
-        loggedClasses.remove(className);
-    }
-
-    /**
-     * @deprecated switch to using setFilter() and getFilter() for SeleniumFilter instance
-     */
-    @Deprecated
-    public List<String> getLoggedClasses() {
-        return loggedClasses;
     }
 
     /**
@@ -195,18 +156,11 @@ public class SeleniumLogger {
     }
 
     private void updateLogger() {
-        getLoggedClasses().forEach(logName -> {
-            Logger logger = Logger.getLogger(logName);
-            logger.setLevel(getLevel());
-            Arrays.stream(logger.getHandlers()).forEach(logger::removeHandler);
-        });
-
-        if (getFilter() != null) {
-            Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
-            rootLogger.addHandler(getHandler());
-        } else {
-            getLoggedClasses().forEach(logName -> Logger.getLogger(logName).addHandler(getHandler()));
-        }
+        Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
         rootLogger.setLevel(getLevel());
+        handler.setLevel(getLevel());
+        handler.setFormatter(getFormatter());
+        handler.setFilter(getFilter());
+        rootLogger.addHandler(handler);
     }
 }
