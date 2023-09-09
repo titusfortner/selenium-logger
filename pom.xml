@@ -4,7 +4,7 @@
 
     <groupId>com.titusfortner</groupId>
     <artifactId>selenium-logger</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Selenium Logger</name>
