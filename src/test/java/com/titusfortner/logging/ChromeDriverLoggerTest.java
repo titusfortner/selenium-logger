@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.chromium.ChromiumDriverLogLevel;
 import org.openqa.selenium.remote.service.DriverService;
 
@@ -174,13 +175,11 @@ public class ChromeDriverLoggerTest extends BaseTest {
         createLogFile("chromedriver");
         chromedriverLogger.setFile(logFile.toFile());
 
-        driver = new ChromeDriver();
-        driver.quit();
+        logsStartStop();
 
         long initialSize = logFileSize();
 
-        driver = new ChromeDriver();
-        driver.quit();
+        logsStartStop();
 
         Assertions.assertEquals(logFileSize(), initialSize);
     }
@@ -190,13 +189,11 @@ public class ChromeDriverLoggerTest extends BaseTest {
         createLogFile("chromedriver-append");
         chromedriverLogger.appendToLog(logFile.toFile());
 
-        driver = new ChromeDriver();
-        driver.quit();
+        logsStartStop();
 
         long initialSize = logFileSize();
 
-        driver = new ChromeDriver();
-        driver.quit();
+        logsStartStop();
 
         Assertions.assertEquals(initialSize*2, logFileSize());
     }
@@ -214,6 +211,13 @@ public class ChromeDriverLoggerTest extends BaseTest {
     }
 
     private void logsInfo() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        driver = new ChromeDriver(options);
+    }
+
+    private void logsStartStop() {
+        logsInfo();
+        driver.quit();
     }
 }

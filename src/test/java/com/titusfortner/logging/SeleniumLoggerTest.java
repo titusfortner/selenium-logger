@@ -214,6 +214,8 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     private void logsMultipleClasses() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        driver = new ChromeDriver(options);
     }
 }

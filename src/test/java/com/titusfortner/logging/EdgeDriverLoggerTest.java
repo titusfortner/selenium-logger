@@ -3,9 +3,12 @@ package com.titusfortner.logging;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeDriverService;
 import org.openqa.selenium.chromium.ChromiumDriverLogLevel;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.IOException;
@@ -174,13 +177,11 @@ public class EdgeDriverLoggerTest extends BaseTest {
         createLogFile("edgedriver");
         edgedriverLogger.setFile(logFile.toFile());
 
-        driver = new EdgeDriver();
-        driver.quit();
+        logsStartStop();
 
         long initialSize = logFileSize();
 
-        driver = new EdgeDriver();
-        driver.quit();
+        logsStartStop();
 
         Assertions.assertEquals(logFileSize(), initialSize);
     }
@@ -190,13 +191,11 @@ public class EdgeDriverLoggerTest extends BaseTest {
         createLogFile("edgedriver-append");
         edgedriverLogger.appendToLog(logFile.toFile());
 
-        driver = new EdgeDriver();
-        driver.quit();
+        logsStartStop();
 
         long initialSize = logFileSize();
 
-        driver = new EdgeDriver();
-        driver.quit();
+        logsStartStop();
 
         Assertions.assertEquals(initialSize*2, logFileSize());
     }
@@ -214,6 +213,13 @@ public class EdgeDriverLoggerTest extends BaseTest {
     }
 
     private void logsInfo() {
-        driver = new EdgeDriver();
+        EdgeOptions options = new EdgeOptions();
+        options.addArguments("--headless=new");
+        driver = new EdgeDriver(options);
+    }
+
+    private void logsStartStop() {
+        logsInfo();
+        driver.quit();
     }
 }
