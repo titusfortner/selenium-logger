@@ -186,7 +186,7 @@ public class EdgeDriverLoggerTest extends BaseTest {
     }
 
     @Test
-    public void appendLogs() throws IOException {
+    public void appendLogs() {
         createLogFile("edgedriver-append");
         edgedriverLogger.appendToLog(logFile.toFile());
 

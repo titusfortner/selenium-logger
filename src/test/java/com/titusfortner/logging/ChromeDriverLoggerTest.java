@@ -186,7 +186,7 @@ public class ChromeDriverLoggerTest extends BaseTest {
     }
 
     @Test
-    public void appendLogs() throws IOException {
+    public void appendLogs() {
         createLogFile("chromedriver-append");
         chromedriverLogger.appendToLog(logFile.toFile());
 
