@@ -53,37 +53,6 @@ public class SeleniumLogger {
         updateLogger();
     }
 
-    /**
-     * This is deprecated. Initialize directly with new GeckoDriverLogger()
-     * @return instance of GeckoDriverLogger
-     */
-    @Deprecated
-    public GeckoDriverLogger geckodriver() {
-        return geckoDriverLogger;
-    }
-
-    /**
-     * @deprecated the handler is built from existing parameters
-     */
-    @Deprecated
-    public void setHandler(Handler handler) {
-        Objects.requireNonNull(handler);
-        this.handler = handler;
-        updateLogger();
-    }
-
-    /**
-     * @deprecated handler is built from provided parameters, get each as needed
-     * @return instance of constructed Handler
-     */
-    @Deprecated
-    public Handler getHandler() {
-        handler.setLevel(getLevel());
-        handler.setFormatter(getFormatter());
-        handler.setFilter(getFilter());
-        return handler;
-    }
-
     public void setLevel(Level level) {
         Objects.requireNonNull(level);
         this.level = level;
@@ -118,18 +87,6 @@ public class SeleniumLogger {
             throw new RuntimeException(e);
         }
         updateLogger();
-    }
-
-    /**
-     * @deprecated use this method without formatter argument and use setFormatter() to change formatter
-     */
-    @Deprecated
-    public void setFileOutput(File file, Formatter formatter) {
-        Objects.requireNonNull(file);
-        Objects.requireNonNull(formatter);
-        this.formatter = formatter;
-
-        setFileOutput(file);
     }
 
     public File getFileOutput() {
