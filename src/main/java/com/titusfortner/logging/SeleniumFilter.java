@@ -1,7 +1,6 @@
 package com.titusfortner.logging;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Filter;
@@ -9,13 +8,8 @@ import java.util.logging.LogRecord;
 
 public class SeleniumFilter implements Filter {
 
-    private final List<String> logAllowedList;
-    private final List<String> logBlockList;
-
-    public SeleniumFilter() {
-        logAllowedList = new ArrayList<>(Collections.singletonList("org.openqa.selenium"));
-        logBlockList = new ArrayList<>();
-    }
+    private final List<String> logAllowedList = new ArrayList<>(List.of("org.openqa.selenium"));
+    private final List<String> logBlockList = new ArrayList<>();
 
     public void addAllowed(String allowed) {
         Objects.requireNonNull(allowed);

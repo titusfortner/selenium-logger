@@ -18,7 +18,7 @@ public class SafariDriverLogger {
 
     public List<File> getList() {
         File[] files = getDirectory().listFiles();
-        return files == null ? null : Arrays.asList(Objects.requireNonNull(files));
+        return files == null ? null : Arrays.asList(files);
     }
 
     @Beta
