@@ -1,3 +1,11 @@
+v2.0.0
+======
+
+Selenium Logging:
+* Requires Java 11
+* Remove all deprecated classes
+* SeleniumFilter is used by default (all Selenium classes now logged by default)
+
 v1.2.0
 ======
 

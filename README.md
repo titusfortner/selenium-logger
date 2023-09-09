@@ -54,14 +54,9 @@ seleniumLogger.setFileOutput(file)
 
 ### Filtering
 
-Currently, enabling logging with this project will only log for `RemoteWebDriver` and `SeleniumManager` classes. 
-For more control, use a filter to generate an allow-list of classes to log based on logger name:
-```java
-SeleniumLogger seleniumLogger = SeleniumLogger.enable();
-seleniumLogger.filter("RemoteWebDriver");
-```
+By default, all Selenium classes are logged.
 
-To quickly log specific classes, use `enable()` with list of classes to turn on logging for.
+To create a list of specific lasses to turn on logs for, based on logger name:
 ```java
 SeleniumLogger.enable("RemoteWebDriver", "SeleniumManaager")
 ```
