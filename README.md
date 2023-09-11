@@ -20,7 +20,7 @@ For Maven users, add this dependency to `pom.xml`
 <dependency>
   <groupId>com.titusfortner</groupId>
   <artifactId>selenium-logger</artifactId>
-  <version>1.1</version>
+  <version>2.1</version>
 </dependency>
 ```
 
@@ -47,7 +47,7 @@ By default, logs are sent to the console in `System.err`.
 If you want to store the logs in a file, add this to your code:
 
 ```java
-SeleniumLogger seleniumLogger = SeleniumLogger.enable();
+SeleniumLogger seleniumLogger = new SeleniumLogger();
 File logFile = new File("/path/to/selenium-log.txt");
 seleniumLogger.setFileOutput(file)
 ```
@@ -65,8 +65,8 @@ SeleniumLogger.enable("RemoteWebDriver", "SeleniumManaager")
 
 * Disable all logging with `SeleniumLogger.disable()`
 * Turn on logging for all classes, all levels with `SeleniumLogger.all()`
-* Create and use your own formatter with `seleniumLogger.setFormatter()`
-* Create and use your own filter with `seleniumLogger.setFilter()`
+* Create and use your own formatter with `setFormatter()`
+* Create and use your own filter with `setFilter()`
 
 
 ## Driver Usage
@@ -80,10 +80,19 @@ As of Selenium 4.9.1, logs are now turned off by default, so they must be enable
 
 These methods will log driver output at the `INFO` level and output to `System.err`
 ```java
-new ChromeDriverLogger().enable();
-new EdgeDriverLogger().enable();
-new GeckoDriverLogger().enable();
-new InternetExplorerDriverLogger().enable();
+ChromeDriverLogger.enable();
+EdgeDriverLogger.enable();
+GeckoDriverLogger.enable();
+InternetExplorerDriverLogger.enable();
+SafariDriverLogger().enable();
+```
+
+These methods will log driver output at the lowest level and output to `System.err`:
+```java
+ChromeDriverLogger.all();
+EdgeDriverLogger.all();
+GeckoDriverLogger.all();
+InternetExplorerDriverLogger.all();
 ```
 
 ### Level
@@ -95,14 +104,6 @@ new ChromeDriverLogger().setLevel(ChromiumDriverLogLevel.DEBUG);
 new EdgeDriverLogger().setLevel(ChromiumDriverLogLevel.DEBUG);
 new GeckoDriverLogger().setLevel(FirefoxDriverLogLevel.DEBUG);
 new InternetExplorerDriverLogger().setLevel(InternetExplorerDriverLogLevel.DEBUG);
-```
-
-You can also log everything with one method:
-```java
-new ChromeDriverLogger().all();
-new EdgeDriverLogger().all();
-new GeckoDriverLogger().all();
-new InternetExplorerDriverLogger().all();
 ```
 
 ### Output
@@ -134,7 +135,6 @@ Safari is special. It does not log to console, only to a file. The
 file has a unique name per session and is stored in `"~/Library/Logs/com.apple.WebDriver/"`.
 You also cannot change the log level, you get whatever Safari gives you.
 
-* To toggle on this logging you can do: `new SafariDriverLogger().enable()`.
 * To get a File object with absolute path to the directory: `getDirectory()`
 * To get a list of all files in that directory; `getList()`
 * To get the last file in the directory (most likely to be the logs you are looking for): `getFile()`
