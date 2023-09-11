@@ -34,7 +34,7 @@ public class InternetExplorerDriverLoggerTest extends BaseTest {
 
     @Test
     public void enableLogsInfo() {
-        internetExplorerDriverLogger.enable();
+        InternetExplorerDriverLogger.enable();
 
         logsInfo();
 
@@ -44,27 +44,8 @@ public class InternetExplorerDriverLoggerTest extends BaseTest {
     }
 
     @Test
-    public void enableIgnoresLevel() {
-        internetExplorerDriverLogger.setLevel(InternetExplorerDriverLogLevel.DEBUG);
-        internetExplorerDriverLogger.enable();
-
-        Assertions.assertEquals(InternetExplorerDriverLogLevel.DEBUG, internetExplorerDriverLogger.getLevel());
-        Assertions.assertEquals(DriverService.LOG_STDERR, internetExplorerDriverLogger.getOutput());
-    }
-
-    @Test
-    public void enableIgnoresOutput() {
-        createLogFile("ieDriver");
-        internetExplorerDriverLogger.setFile(logFile.toFile());
-        internetExplorerDriverLogger.enable();
-
-        Assertions.assertEquals(InternetExplorerDriverLogLevel.INFO, internetExplorerDriverLogger.getLevel());
-        Assertions.assertEquals(logFile.toString(), internetExplorerDriverLogger.getOutput());
-    }
-
-    @Test
     public void disableLogs() {
-        internetExplorerDriverLogger.enable();
+        InternetExplorerDriverLogger.enable();
         internetExplorerDriverLogger.disable();
 
         logsInfo();

@@ -4,8 +4,16 @@ import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.GeckoDriverService;
 
 public class GeckoDriverLogger extends DriverLogger{
-    public void all() {
-        setLevel(FirefoxDriverLogLevel.TRACE);
+    public static GeckoDriverLogger enable() {
+        GeckoDriverLogger logger = new GeckoDriverLogger();
+        logger.ensureEnabled();
+        return logger;
+    }
+
+    public static GeckoDriverLogger all() {
+        GeckoDriverLogger logger = new GeckoDriverLogger();
+        logger.setLevel(FirefoxDriverLogLevel.TRACE);
+        return logger;
     }
 
     public void setLevel(FirefoxDriverLogLevel level) {

@@ -7,8 +7,9 @@ import java.io.File;
 import java.util.*;
 
 public class SafariDriverLogger {
-    public void enable() {
+    public static SafariDriverLogger enable() {
         System.setProperty(SafariDriverService.SAFARI_DRIVER_LOGGING, "true");
+        return new SafariDriverLogger();
     }
 
     public File getDirectory() {

@@ -29,7 +29,7 @@ public class SafariDriverLoggerTest extends BaseTest {
 
     @Test
     public void enableLogs() {
-        safariDriverLogger.enable();
+        SafariDriverLogger.enable();
 
         int before = safariDriverLogger.getList().size();
         driver = new SafariDriver();
@@ -39,7 +39,7 @@ public class SafariDriverLoggerTest extends BaseTest {
 
     @Test
     public void getFile() {
-        safariDriverLogger.enable();
+        SafariDriverLogger.enable();
 
         driver = new SafariDriver();
 

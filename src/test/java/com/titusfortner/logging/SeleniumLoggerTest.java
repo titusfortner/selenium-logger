@@ -218,4 +218,10 @@ public class SeleniumLoggerTest extends BaseTest {
         options.addArguments("--headless=new");
         driver = new ChromeDriver(options);
     }
+
+    private void logsRemote() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless=new");
+        driver = new RemoteWebDriver(options);
+    }
 }

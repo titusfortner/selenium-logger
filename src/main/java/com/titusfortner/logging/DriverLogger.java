@@ -8,11 +8,6 @@ public abstract class DriverLogger {
     protected abstract String getLogProperty();
     protected abstract void ensureLevel();
 
-    public void enable() {
-        ensureOutput();
-        ensureLevel();
-    }
-
     public void disable() {
         System.setProperty(getLogProperty(), DriverService.LOG_NULL);
     }
@@ -35,5 +30,10 @@ public abstract class DriverLogger {
         if (getOutput() == null) {
             System.setProperty(getLogProperty(), DriverService.LOG_STDERR);
         }
+    }
+
+    protected void ensureEnabled() {
+        ensureOutput();
+        ensureLevel();
     }
 }

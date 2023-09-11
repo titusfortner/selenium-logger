@@ -9,10 +9,6 @@ public abstract class ChromiumDriverLogger extends DriverLogger {
     protected abstract String getAppendLogProperty();
     protected abstract String getReadableTimestampProperty();
 
-    public void all() {
-        setLevel(ChromiumDriverLogLevel.ALL);
-    }
-
     public void setLevel(ChromiumDriverLogLevel level) {
         System.setProperty(getLogLevelProperty(), level.name());
         ensureOutput();

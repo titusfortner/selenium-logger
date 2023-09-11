@@ -1,8 +1,20 @@
 package com.titusfortner.logging;
 
+import org.openqa.selenium.chromium.ChromiumDriverLogLevel;
 import org.openqa.selenium.edge.EdgeDriverService;
 
 public class EdgeDriverLogger extends ChromiumDriverLogger{
+    public static EdgeDriverLogger enable() {
+        EdgeDriverLogger logger = new EdgeDriverLogger();
+        logger.ensureEnabled();
+        return logger;
+    }
+
+    public static EdgeDriverLogger all() {
+        EdgeDriverLogger logger = new EdgeDriverLogger();
+        logger.setLevel(ChromiumDriverLogLevel.ALL);
+        return logger;
+    }
 
     protected String getLogProperty() {
         return EdgeDriverService.EDGE_DRIVER_LOG_PROPERTY;

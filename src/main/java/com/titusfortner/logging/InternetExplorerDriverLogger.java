@@ -4,6 +4,18 @@ import org.openqa.selenium.ie.InternetExplorerDriverLogLevel;
 import org.openqa.selenium.ie.InternetExplorerDriverService;
 
 public class InternetExplorerDriverLogger extends DriverLogger {
+    public static InternetExplorerDriverLogger enable() {
+        InternetExplorerDriverLogger logger = new InternetExplorerDriverLogger();
+        logger.ensureEnabled();
+        return logger;
+    }
+
+    public static InternetExplorerDriverLogger all() {
+        InternetExplorerDriverLogger logger = new InternetExplorerDriverLogger();
+        logger.setLevel(InternetExplorerDriverLogLevel.TRACE);
+        return logger;
+    }
+
     public void setLevel(InternetExplorerDriverLogLevel level) {
         System.setProperty(getLogLevelProperty(), level.name());
         ensureOutput();
@@ -12,10 +24,6 @@ public class InternetExplorerDriverLogger extends DriverLogger {
     public InternetExplorerDriverLogLevel getLevel() {
         String logLevel = System.getProperty(getLogLevelProperty());
         return logLevel == null ? null : InternetExplorerDriverLogLevel.valueOf(logLevel);
-    }
-
-    public void all() {
-        setLevel(InternetExplorerDriverLogLevel.TRACE);
     }
 
     protected void ensureLevel() {

@@ -36,7 +36,7 @@ public class ChromeDriverLoggerTest extends BaseTest {
 
     @Test
     public void enableLogsInfo() {
-        chromedriverLogger.enable();
+        ChromeDriverLogger.enable();
 
         logsInfo();
 
@@ -46,34 +46,8 @@ public class ChromeDriverLoggerTest extends BaseTest {
     }
 
     @Test
-    public void enableDoesNotOverwriteLevel() {
-        chromedriverLogger.setLevel(ChromiumDriverLogLevel.DEBUG);
-        chromedriverLogger.enable();
-
-        logsInfo();
-
-        Assertions.assertEquals(ChromiumDriverLogLevel.DEBUG, chromedriverLogger.getLevel());
-        Assertions.assertEquals(DriverService.LOG_STDERR, chromedriverLogger.getOutput());
-        Assertions.assertTrue(getOutput().contains("[DEBUG]"));
-    }
-
-    @Test
-    public void enableDoesNotOverwriteOutput() {
-        createLogFile("chromedriver");
-        chromedriverLogger.setFile(logFile.toFile());
-        chromedriverLogger.enable();
-
-        logsInfo();
-
-        Assertions.assertEquals(ChromiumDriverLogLevel.INFO, chromedriverLogger.getLevel());
-        Assertions.assertEquals(logFile.toString(), chromedriverLogger.getOutput());
-        Assertions.assertFalse(getOutput().contains("[INFO]"));
-        Assertions.assertTrue(logFileContains("[INFO]"));
-    }
-
-    @Test
     public void disableLogs() {
-        chromedriverLogger.enable();
+        ChromeDriverLogger.enable();
         chromedriverLogger.disable();
 
         logsInfo();

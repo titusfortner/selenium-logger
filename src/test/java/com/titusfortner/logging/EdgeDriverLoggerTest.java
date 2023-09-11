@@ -38,7 +38,7 @@ public class EdgeDriverLoggerTest extends BaseTest {
 
     @Test
     public void enableLogsInfo() {
-        edgedriverLogger.enable();
+        EdgeDriverLogger.enable();
 
         logsInfo();
 
@@ -48,34 +48,8 @@ public class EdgeDriverLoggerTest extends BaseTest {
     }
 
     @Test
-    public void enableDoesNotOverwriteLevel() {
-        edgedriverLogger.setLevel(ChromiumDriverLogLevel.DEBUG);
-        edgedriverLogger.enable();
-
-        logsInfo();
-
-        Assertions.assertEquals(ChromiumDriverLogLevel.DEBUG, edgedriverLogger.getLevel());
-        Assertions.assertEquals(DriverService.LOG_STDERR, edgedriverLogger.getOutput());
-        Assertions.assertTrue(getOutput().contains("[DEBUG]"));
-    }
-
-    @Test
-    public void enableDoesNotOverwriteOutput() {
-        createLogFile("edgedriver");
-        edgedriverLogger.setFile(logFile.toFile());
-        edgedriverLogger.enable();
-
-        logsInfo();
-
-        Assertions.assertEquals(ChromiumDriverLogLevel.INFO, edgedriverLogger.getLevel());
-        Assertions.assertEquals(logFile.toString(), edgedriverLogger.getOutput());
-        Assertions.assertFalse(getOutput().contains("[INFO]"));
-        Assertions.assertTrue(logFileContains("[INFO]"));
-    }
-
-    @Test
     public void disableLogs() {
-        edgedriverLogger.enable();
+        EdgeDriverLogger.enable();
         edgedriverLogger.disable();
 
         logsInfo();

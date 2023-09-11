@@ -31,7 +31,7 @@ public class GeckoDriverLoggerTest extends BaseTest {
 
     @Test
     public void enableLogsInfo() {
-        geckodriverLogger.enable();
+        GeckoDriverLogger.enable();
 
         logsInfo();
 
@@ -41,27 +41,8 @@ public class GeckoDriverLoggerTest extends BaseTest {
     }
 
     @Test
-    public void enableIgnoresLevel() {
-        geckodriverLogger.setLevel(FirefoxDriverLogLevel.DEBUG);
-        geckodriverLogger.enable();
-
-        Assertions.assertEquals(FirefoxDriverLogLevel.DEBUG, geckodriverLogger.getLevel());
-        Assertions.assertEquals(DriverService.LOG_STDERR, geckodriverLogger.getOutput());
-    }
-
-    @Test
-    public void enableIgnoresOutput() {
-        createLogFile("firefoxDriver");
-        geckodriverLogger.setFile(logFile.toFile());
-        geckodriverLogger.enable();
-
-        Assertions.assertEquals(FirefoxDriverLogLevel.INFO, geckodriverLogger.getLevel());
-        Assertions.assertEquals(logFile.toString(), geckodriverLogger.getOutput());
-    }
-
-    @Test
     public void disableGeckoDriverOutput() {
-        geckodriverLogger.enable();
+        GeckoDriverLogger.enable();
         geckodriverLogger.disable();
 
         logsInfo();
