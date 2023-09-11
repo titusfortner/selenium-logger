@@ -9,7 +9,7 @@ import java.util.logging.LogRecord;
 public class SeleniumFilter implements Filter {
 
     private final List<String> logAllowedList = new ArrayList<>(List.of("org.openqa.selenium"));
-    private final List<String> logBlockList = new ArrayList<>();
+    private final List<String> logBlockList = new ArrayList<>(List.of("opentelemetry"));
 
     public void addAllowed(String allowed) {
         Objects.requireNonNull(allowed);
