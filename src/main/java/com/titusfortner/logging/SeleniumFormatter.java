@@ -5,6 +5,8 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SeleniumFormatter extends Formatter {
 
@@ -14,7 +16,8 @@ public class SeleniumFormatter extends Formatter {
         if (record.getSourceClassName() != null) {
             try {
                 source = record.getSourceClassName().contains("org.openqa.selenium") ? "Selenium [" : "[";
-                source += Class.forName(record.getSourceClassName()).getSimpleName();
+                String fullName = record.getSourceClassName().replaceAll("\\$.*", "");
+                source += Class.forName(fullName).getSimpleName();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -26,6 +29,21 @@ public class SeleniumFormatter extends Formatter {
             source = record.getLoggerName();
         }
         String message = formatMessage(record);
+
+        Pattern patternBase64Encoded = Pattern.compile("\"body\":\".*\",\"base64Encoded\":true");
+        Matcher matcherBase64Encoded = patternBase64Encoded.matcher(message);
+        if (matcherBase64Encoded.find()) {
+            message = message.replaceAll("\"body\":\".*\",\"base64Encoded\":true", "\"body\":<snip>");
+        } else {
+            Pattern patternBody = Pattern.compile("\"body\": \"(.*)\"");
+            Matcher matcherBody = patternBody.matcher(message);
+            if (matcherBody.find()) {
+                String matched = matcherBody.group(1);
+                if (matched.length() > 2000) {
+                    message = message.replace(matched, "<snip>");
+                }
+            }}
+
         String throwable = "";
         if (record.getThrown() != null) {
             StringWriter sw = new StringWriter();
