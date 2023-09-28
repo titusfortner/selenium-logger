@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.titusfortner</groupId>
@@ -16,7 +17,7 @@
             <name>MIT</name>
             <url>https://opensource.org/license/mit/</url>
             <distribution>repo</distribution>
-            <comments>a permissive free software license </comments>
+            <comments>a permissive free software license</comments>
         </license>
     </licenses>
 
@@ -37,8 +38,8 @@
     <scm>
         <developerConnection>scm:git:git@github.com:titusfortner/selenium-logger.git</developerConnection>
         <url>git@github.com:titusfortner/selenium-logger.git</url>
-      <tag>selenium-logger-2.2</tag>
-  </scm>
+        <tag>selenium-logger-2.2</tag>
+    </scm>
 
     <properties>
         <surefire.parallel>1</surefire.parallel>
@@ -63,6 +64,11 @@
             <artifactId>junit-jupiter-engine</artifactId>
             <version>5.10.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>2.0.6</version>
         </dependency>
     </dependencies>
 

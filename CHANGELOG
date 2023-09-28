@@ -1,3 +1,9 @@
+v2.2.1
+======
+
+Selenium Logging:
+* Need slf4j-nop so long as AHC is a dependency of Selenium
+
 v2.2.0
 ======
 
