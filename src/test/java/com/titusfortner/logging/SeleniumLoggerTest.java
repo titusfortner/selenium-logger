@@ -137,6 +137,18 @@ public class SeleniumLoggerTest extends BaseTest {
     }
 
     @Test
+    public void filtersOut() {
+        seleniumLogger.setLevel(Level.FINE);
+        seleniumLogger.filterOut("DriverService");
+
+        logsMultipleClasses();
+
+        Assertions.assertFalse(getOutput().contains("FINE [HttpClientImpl"));
+        Assertions.assertTrue(getOutput().contains("FINE Selenium [SeleniumManager"));
+        Assertions.assertFalse(getOutput().contains("FINE Selenium [DriverService"));
+    }
+
+    @Test
     public void mixAllowAndBlockLists() {
         seleniumLogger.setLevel(Level.FINE);
         SeleniumFilter filter = new SeleniumFilter();

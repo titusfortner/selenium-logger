@@ -102,6 +102,14 @@ public class SeleniumLogger {
         setFilter(filter);
     }
 
+    public void filterOut(String name, String... names) {
+        Objects.requireNonNull(name);
+        SeleniumFilter filter = new SeleniumFilter();
+        filter.addBlocked(name);
+        Arrays.stream(names).forEach(filter::addBlocked);
+        setFilter(filter);
+    }
+
     public void setFilter(Filter filter) {
         Objects.requireNonNull(filter);
         this.filter = filter;
