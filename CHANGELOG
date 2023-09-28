@@ -4,6 +4,7 @@ v2.2.0
 Selenium Logging:
 * Add support to filter out specific classes
 * Update default formatter to remove base64 output from response body
+* Remove slf4j-nop as a dependency
 
 v2.1.0
 ======
