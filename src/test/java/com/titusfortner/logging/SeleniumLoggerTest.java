@@ -75,7 +75,7 @@ public class SeleniumLoggerTest extends BaseTest {
         seleniumLogger.setFormatter(new SimpleFormatter());
         logsWarning();
 
-        String fine = "WARNING: chrome banana not available for download";
+        String fine = "chrome banana not available for download";
         Assertions.assertTrue(getOutput().contains(fine));
     }
 
@@ -210,7 +210,7 @@ public class SeleniumLoggerTest extends BaseTest {
             ChromeDriverService service = ChromeDriverService.createDefaultService();
             ChromeOptions options = new ChromeOptions();
             options.setBrowserVersion("banana");
-            DriverFinder.getPath(service, options, true);
+            DriverFinder.getPath(service, options, false);
         } catch (Throwable e) {
             // ignore
         }
@@ -219,7 +219,7 @@ public class SeleniumLoggerTest extends BaseTest {
     // Code that Generates a Selenium Manager FINE in logs
     private void logsFine() {
         try {
-            DriverFinder.getPath(ChromeDriverService.createDefaultService(), new ChromeOptions(), true);
+            DriverFinder.getPath(ChromeDriverService.createDefaultService(), new ChromeOptions(), false);
         } catch (Throwable e) {
             // ignore
         }
@@ -229,11 +229,5 @@ public class SeleniumLoggerTest extends BaseTest {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless=new");
         driver = new ChromeDriver(options);
-    }
-
-    private void logsRemote() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new");
-        driver = new RemoteWebDriver(options);
     }
 }

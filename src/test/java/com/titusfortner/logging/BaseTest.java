@@ -18,7 +18,6 @@ public class BaseTest {
     protected WebDriver driver;
     protected DriverService service;
     private final ByteArrayOutputStream err = new ByteArrayOutputStream();
-    private static final PrintStream originalErr = System.err;
     protected Path logFile;
 
     @BeforeEach
@@ -34,11 +33,6 @@ public class BaseTest {
         if (service != null) {
             service.close();
         }
-    }
-
-    @AfterAll
-    public static void restoreErr() {
-        System.setErr(originalErr);
     }
 
     protected String getOutput() {
