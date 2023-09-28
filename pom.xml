@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.titusfortner</groupId>
     <artifactId>selenium-logger</artifactId>
-    <version>2.3-SNAPSHOT</version>
+    <version>2.2.1</version>
     <packaging>jar</packaging>
 
     <name>Selenium Logger</name>
@@ -38,7 +37,7 @@
     <scm>
         <developerConnection>scm:git:git@github.com:titusfortner/selenium-logger.git</developerConnection>
         <url>git@github.com:titusfortner/selenium-logger.git</url>
-        <tag>selenium-logger-2.2</tag>
+        <tag>selenium-logger-2.2.1</tag>
     </scm>
 
     <properties>
