@@ -30,6 +30,12 @@ public class SeleniumFormatter extends Formatter {
         }
         String message = formatMessage(record);
 
+        if (message == null) {
+            // Throwable can strip out message from cause
+            // https://github.com/SeleniumHQ/selenium/pull/12853
+            message = record.getThrown().getCause().getMessage();
+        }
+
         Pattern patternBase64Encoded = Pattern.compile("\"body\":\".*\",\"base64Encoded\":true");
         Matcher matcherBase64Encoded = patternBase64Encoded.matcher(message);
         if (matcherBase64Encoded.find()) {
