@@ -36,12 +36,6 @@ public class SeleniumFormatter extends Formatter {
             message = record.getThrown().getCause().getMessage();
         }
 
-        if (message == null) {
-            // Throwable can strip out message from cause
-            // https://github.com/SeleniumHQ/selenium/pull/12853
-            message = record.getThrown().getCause().getMessage();
-        }
-
         message = filterOutScripts(message);
         message = filterOutBase64(message);
 
@@ -67,7 +61,7 @@ public class SeleniumFormatter extends Formatter {
         } else {
             Pattern patternBody = Pattern.compile("\"body\": \"(.*)\"");
             Matcher matcherBody = patternBody.matcher(message);
-            if (!matcherBody.find() && matcherBody.group(1).length() > 2000) {
+            if (matcherBody.find() && matcherBody.group(1).length() > 2000) {
                 return message.replace(matcherBody.group(1), "<snip>");
             }
             return message;
