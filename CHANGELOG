@@ -1,3 +1,10 @@
+v2.2.2
+======
+
+Selenium Logging:
+* Workaround a Java bug that hides messages from Throwable
+* improve filtering in default formatter by snipping large JS blocks
+
 v2.2.1
 ======
 
