@@ -51,7 +51,7 @@ For Maven users, add this dependency to `pom.xml`
 <dependency>
   <groupId>com.titusfortner</groupId>
   <artifactId>selenium-logger</artifactId>
-  <version>2.2.2</version>
+  <version>2.3.0</version>
 </dependency>
 ```
 
