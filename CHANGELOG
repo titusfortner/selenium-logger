@@ -1,3 +1,11 @@
+v2.3.0
+======
+
+Selenium Logging:
+* Improved filtering out of Base64 values
+* Truncate large javascript executions by default
+* Implement `setFullLogMessages()` to toggle off truncations where possible
+
 v2.2.2
 ======
 
