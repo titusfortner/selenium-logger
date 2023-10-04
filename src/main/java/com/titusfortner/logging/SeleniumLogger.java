@@ -49,7 +49,12 @@ public class SeleniumLogger {
     }
 
     public SeleniumLogger() {
+        System.setProperty("webdriver.remote.shorten_log_messages", "true");
         updateLogger();
+    }
+
+    public void setFullLogMessages(Boolean fullLogMessages) {
+        System.setProperty("webdriver.remote.shorten_log_messages", String.valueOf(!fullLogMessages));
     }
 
     public void setLevel(Level level) {

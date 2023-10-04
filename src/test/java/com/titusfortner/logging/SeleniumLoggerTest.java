@@ -11,7 +11,6 @@ import org.openqa.selenium.remote.service.DriverFinder;
 
 import java.net.URL;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
 
 public class SeleniumLoggerTest extends BaseTest {
     private SeleniumLogger seleniumLogger;
@@ -68,20 +67,6 @@ public class SeleniumLoggerTest extends BaseTest {
         Assertions.assertTrue(getOutput().contains(warning));
         String fine = "FINE Selenium [SeleniumManager";
         Assertions.assertFalse(getOutput().contains(fine));
-    }
-
-    @Test
-    public void setFormatter() {
-        seleniumLogger.setFormatter(new SimpleFormatter());
-        logsWarning();
-
-        String fine = "chrome banana not available for download";
-        Assertions.assertTrue(getOutput().contains(fine));
-    }
-
-    @Test
-    public void getFormatter() {
-        Assertions.assertSame(seleniumLogger.getFormatter().getClass(), SeleniumFormatter.class);
     }
 
     @Test
@@ -204,19 +189,6 @@ public class SeleniumLoggerTest extends BaseTest {
         }
     }
 
-    // Code that Generates a Selenium Manager WARNING in logs
-    private void logsWarning() {
-        try {
-            ChromeDriverService service = ChromeDriverService.createDefaultService();
-            ChromeOptions options = new ChromeOptions();
-            options.setBrowserVersion("banana");
-            DriverFinder.getPath(service, options, false);
-        } catch (Throwable e) {
-            // ignore
-        }
-    }
-
-    // Code that Generates a Selenium Manager FINE in logs
     private void logsFine() {
         try {
             DriverFinder.getPath(ChromeDriverService.createDefaultService(), new ChromeOptions(), false);

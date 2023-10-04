@@ -36,8 +36,10 @@ public class SeleniumFormatter extends Formatter {
         }
 
         // See https://github.com/SeleniumHQ/selenium/pull/12866
-        message = filterOutBase64(message);
-        message = filterOutProfile(message);
+        if (Boolean.getBoolean("webdriver.remote.shorten_log_messages")) {
+            message = filterOutBase64(message);
+            message = filterOutProfile(message);
+        }
 
         String throwable = "";
         if (record.getThrown() != null) {

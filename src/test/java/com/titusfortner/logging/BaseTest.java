@@ -1,9 +1,11 @@
 package com.titusfortner.logging;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.service.DriverFinder;
 import org.openqa.selenium.remote.service.DriverService;
 
 import java.io.ByteArrayOutputStream;
@@ -64,6 +66,17 @@ public class BaseTest {
             logFile.toFile().deleteOnExit();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    protected void logsWarning() {
+        try {
+            ChromeDriverService service = ChromeDriverService.createDefaultService();
+            ChromeOptions options = new ChromeOptions();
+            options.setBrowserVersion("banana");
+            DriverFinder.getPath(service, options, false);
+        } catch (Throwable e) {
+            // ignore
         }
     }
 }
