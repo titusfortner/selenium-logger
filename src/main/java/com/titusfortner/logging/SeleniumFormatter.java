@@ -31,13 +31,13 @@ public class SeleniumFormatter extends Formatter {
         String message = formatMessage(record);
 
         if (message == null) {
-            // Throwable can strip out message from cause
-            // https://github.com/SeleniumHQ/selenium/pull/12853
+            // See https://github.com/SeleniumHQ/selenium/pull/12853
             message = record.getThrown().getCause().getMessage();
         }
 
-        message = filterOutScripts(message);
+        // See https://github.com/SeleniumHQ/selenium/pull/12866
         message = filterOutBase64(message);
+        message = filterOutProfile(message);
 
         String throwable = "";
         if (record.getThrown() != null) {
@@ -54,30 +54,26 @@ public class SeleniumFormatter extends Formatter {
     }
 
     private String filterOutBase64(String message) {
-        Pattern patternBase64Encoded = Pattern.compile("\"body\":\".*\",\"base64Encoded\":true");
-        Matcher matcherBase64Encoded = patternBase64Encoded.matcher(message);
-        if (matcherBase64Encoded.find()) {
-            return message.replaceAll("\"body\":\".*\",\"base64Encoded\":true", "\"body\":<snip>");
-        } else {
-            Pattern patternBody = Pattern.compile("\"body\": \"(.*)\"");
-            Matcher matcherBody = patternBody.matcher(message);
-            if (matcherBody.find() && matcherBody.group(1).length() > 2000) {
-                return message.replace(matcherBody.group(1), "<snip>");
-            }
-            return message;
+        String regex = "Executed: (printPage|fullPageScreenshot) \\(Response: SessionID: .*, State: success, Value:(.*)";
+        Pattern patternBase64 = Pattern.compile(regex);
+        Matcher matcherBase64 = patternBase64.matcher(message);
+        if (matcherBase64.find()) {
+            String command = matcherBase64.group(1);
+            String base64 = matcherBase64.group(2);
+            return message.replace(base64, String.format(" *%s response suppressed*)", command));
         }
+        return message;
     }
 
-    private String filterOutScripts(String message) {
-        Pattern patternScript = Pattern.compile(".*\\* .+ \\*(.*)");
-        Matcher matcherScript = patternScript.matcher(message);
-        if (!matcherScript.find()) {
-            return message;
+    private String filterOutProfile(String message) {
+        Pattern patternProfile = Pattern.compile("\\{profile=(.*)}");
+        Matcher matcherProfile = patternProfile.matcher(message);
+        if (matcherProfile.find()) {
+            String group = matcherProfile.group(1);
+            if (group.length() > 300) {
+                return message.replace(group, " *profile value suppressed*}");
+            }
         }
-
-        int firstAsterisk = message.indexOf('*');
-        int secondAsterisk = message.indexOf('*', firstAsterisk + 1);
-        int lastLineBreak = message.trim().lastIndexOf('\n');
-        return message.substring(0, secondAsterisk + 1) + "/<snip>\"}" + message.substring(lastLineBreak);
+        return message;
     }
 }

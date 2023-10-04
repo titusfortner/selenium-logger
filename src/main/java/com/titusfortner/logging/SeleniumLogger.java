@@ -19,7 +19,6 @@ public class SeleniumLogger {
     private Formatter formatter = new SeleniumFormatter();
     private File file;
     public final Logger rootLogger = Logger.getLogger("");
-    private final GeckoDriverLogger geckoDriverLogger = new GeckoDriverLogger();
 
     /**
      * This turns on logger level to FINE
@@ -123,9 +122,15 @@ public class SeleniumLogger {
     private void updateLogger() {
         Arrays.stream(rootLogger.getHandlers()).forEach(rootLogger::removeHandler);
         rootLogger.setLevel(getLevel());
-        handler.setLevel(getLevel());
         handler.setFormatter(getFormatter());
-        handler.setFilter(getFilter());
+        handler.setLevel(getLevel());
+        Filter filter = getFilter();
+        // See https://github.com/SeleniumHQ/selenium/pull/12866
+        if (getLevel().intValue() > Level.FINER.intValue() && filter instanceof SeleniumFilter) {
+            ((SeleniumFilter) filter).addBlocked("DumpHttpExchangeFilter");
+            ((SeleniumFilter) filter).addBlocked("W3CHttpResponseCodec");
+        }
+        handler.setFilter(filter);
         rootLogger.addHandler(handler);
     }
 }
