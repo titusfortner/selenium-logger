@@ -1,3 +1,11 @@
+v2.4.0
+======
+
+Selenium Logging:
+* Require Selenium 4.14.1
+* Remove JDK client now that it is Selenium's default
+* Remove filtering things that Selenium now handles by default
+
 v2.3.0
 ======
 
