@@ -129,13 +129,7 @@ public class SeleniumLogger {
         rootLogger.setLevel(getLevel());
         handler.setFormatter(getFormatter());
         handler.setLevel(getLevel());
-        Filter filter = getFilter();
-        // See https://github.com/SeleniumHQ/selenium/pull/12866
-        if (getLevel().intValue() > Level.FINER.intValue() && filter instanceof SeleniumFilter) {
-            ((SeleniumFilter) filter).addBlocked("DumpHttpExchangeFilter");
-            ((SeleniumFilter) filter).addBlocked("W3CHttpResponseCodec");
-        }
-        handler.setFilter(filter);
+        handler.setFilter(getFilter());
         rootLogger.addHandler(handler);
     }
 }
